@@ -1,12 +1,11 @@
 ### ACME CORP
 ### Customer session key generator. Protects PII.
 ### / 2020
-
-from flask import Flask
-
 import string
 import secrets
 import hashlib
+
+from flask import Flask
 
 app = Flask(__name__)
 
