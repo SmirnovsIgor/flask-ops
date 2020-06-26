@@ -8,8 +8,6 @@ jobs:
       - run:
           name: Create venv
           command: |
-            echo 'export TAG=0.1.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
-            echo 'export IMAGE_NAME=flask-ops' >> $BASH_ENV
             virtualenv flaskops
       - run:
           name: Install python dependencies
@@ -28,7 +26,9 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t smirnov_igor077/$IMAGE_NAME:$TAG .
+            echo 'export TAG=0.1.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+            echo 'export IMAGE_NAME=flask-ops' >> $BASH_ENV
+            docker build -t smirnovigor077/$IMAGE_NAME:$TAG .
   push_image_to_registry:
     machine: true
     steps:
