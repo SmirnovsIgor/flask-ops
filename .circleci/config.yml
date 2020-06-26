@@ -22,15 +22,18 @@ jobs:
             . flaskops/bin/activate
             pylint --load-plugins pylint_flask app.py
   build:
+    machine: true
     steps:
       - checkout
       - run:
           name: Build Docker Image
           command: |
-                docker build -t smirnov_igor077/$IMAGE_NAME:$TAG .
+            docker build -t smirnov_igor077/$IMAGE_NAME:$TAG .
   push_image_to_registry:
+    machine: true
     steps:
-      -run:
+      - checkout
+      - run:
          name: Push Docker Image to DockerHub
          command: |
             docker login -u $DOCKER_LOGIN --password=$DOCKER_PWD
