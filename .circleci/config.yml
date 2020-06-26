@@ -50,3 +50,6 @@ workflows:
       - build:
           requires:
             - lint
+      - tests:
+          requires:
+            - build
