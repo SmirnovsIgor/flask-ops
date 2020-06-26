@@ -20,7 +20,7 @@ jobs:
           name: Run Linter
           command: |
             . flaskops/bin/activate
-            pylint --load-plugins pylint_flask app.py
+            pylint --load-plugins pylint_flask --fail-under=7 app.py
   build:
     machine: true
     steps:
