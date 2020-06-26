@@ -26,8 +26,9 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            echo 'export TAG=0.1.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
-            echo 'export IMAGE_NAME=flask-ops' >> $BASH_ENV
+            echo 'export TAG=0.1.${CIRCLE_BUILD_NUM}'
+            echo 'export IMAGE_NAME=flask-ops'
+            echo $IMAGE_NAME
             docker build -t smirnovigor077/$IMAGE_NAME:$TAG .
   push_image_to_registry:
     machine: true
