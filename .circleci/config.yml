@@ -32,6 +32,16 @@ jobs:
          command: |
             docker login -u $DOCKER_LOGIN --password=$DOCKER_PWD
             docker push smirnovigor077/flask-ops:${CIRCLE_SHA1}
+  tests:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Test Image
+          command: |
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PWD
+            docker pull smirnovigor077/flask-ops:${CIRCLE_SHA1}
+            docker run --rm -it smirnovigor077/flask-ops:${CIRCLE_SHA1} python tests.py
 workflows:
   version: 2
   flask-ops-cicd:
