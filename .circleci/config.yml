@@ -41,7 +41,7 @@ jobs:
           command: |
             docker login -u $DOCKER_LOGIN -p $DOCKER_PWD
             docker pull smirnovigor077/flask-ops:${CIRCLE_SHA1}
-            docker run --rm -it smirnovigor077/flask-ops:${CIRCLE_SHA1} python tests.py
+            docker run --rm -it -d -p 5000:5000 smirnovigor077/flask-ops:${CIRCLE_SHA1} python tests.py
       - run:
           name: Health check
           command: |
