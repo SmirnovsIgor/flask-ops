@@ -50,12 +50,12 @@ jobs:
           name: Deploy to Heroku
           command: |
             echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-            
+
 workflows:
   version: 2
   flask-ops-cicd:
     jobs:
-      - lint
+      - linter
       - build:
           requires:
             - linter
