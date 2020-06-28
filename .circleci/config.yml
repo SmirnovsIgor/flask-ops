@@ -53,6 +53,4 @@ workflows:
       - build:
           requires:
             - linter
-      - deploy:
-          requires:
-            - tests
+      - deploy
