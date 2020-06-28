@@ -21,3 +21,7 @@ class TestApp(unittest.TestCase):
     def test_encrypt_string_equal_block_size(self):
         self.assertEqual(encrypt_string('a' * 64),
                          'ffe054fe7ae0cb6dc65c3af9b61d5209f439851db43d0ba5997337df154668eb')
+
+
+if __name__ == '__main__':
+    unittest.main()

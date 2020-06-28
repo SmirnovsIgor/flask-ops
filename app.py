@@ -3,10 +3,10 @@
 ### Customer session key generator. Protects PII.
 ### / 2020
 """
-import os
-import string
-import secrets
 import hashlib
+import os
+import secrets
+import string
 
 from flask import Flask
 
@@ -21,12 +21,11 @@ def encrypt_string(hash_string):
     return sha_signature
 
 
-def generate():
+def generate(salt):
     rand_device = string.ascii_letters + string.digits
-    return encrypt_string((''.join(secrets.choice(rand_device)
-                                   for i in range(8))).join(SUPER_SECRET_SALT))
+    return encrypt_string((''.join(secrets.choice(rand_device) for i in range(8))).join(salt))
 
 
 @app.route('/')
 def signature():
-    return generate()
+    return generate(SUPER_SECRET_SALT)

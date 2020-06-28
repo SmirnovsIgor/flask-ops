@@ -18,7 +18,21 @@ jobs:
           name: Run Linter
           command: |
             . flaskops/bin/activate
-            pylint --load-plugins pylint_flask --fail-under=7 app.py
+            pylint --load-plugins pylint_flask --fail-under=7 app.py tests.py
+  unittests:
+    docker:
+      - image: circleci/python:3.7.4
+    steps:
+      - checkout
+      - run:
+          name: Run unittests
+          command: |
+            python tests.py
+      - store_artifacts:
+          path: test-reports/
+          destination: tr:${CIRCLE_SHA1}
+      - store_test_results:
+          path: test-reports/
   build:
     machine: true
     steps:
@@ -45,7 +59,6 @@ jobs:
           command: |
             bash setup-heroku.sh
             echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-            heroku container:push web --app ${HEROKU_APP_NAME}
             heroku container:release web --app ${HEROKU_APP_NAME}
 workflows:
   version: 2
