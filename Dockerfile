@@ -1,8 +1,6 @@
 FROM python:3.7
 ARG secret_salt
-ARG test_salt
 ENV SALT=$secret_salt
-ENV TEST_SALT=$test_salt
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 RUN mkdir /flask-app

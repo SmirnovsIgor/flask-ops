@@ -10,7 +10,7 @@ from app import generate
 def app():
     app = Flask(__name__)
 
-    test_salt = os.environ.get('TEST_SALT')
+    test_salt = 124325246546379565
 
     @app.route('/')
     def signature():
