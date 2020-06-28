@@ -44,7 +44,7 @@ jobs:
           name: Deploy to Heroku
           command: |
             bash setup-heroku.sh
-            heroku container:${HEROKU_APP_NAME} release
+            heroku container:push web --app ${HEROKU_APP_NAME}
 workflows:
   version: 2
   flask-ops-cicd:
