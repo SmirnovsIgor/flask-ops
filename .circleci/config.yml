@@ -26,16 +26,16 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/flask-ops:${CIRCLE_SHA1}/web .
+            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/${HEROKU_APP_NAME}/web .
       - run:
           name: Tests
           command: |
-            docker run --rm -it registry.heroku.com/${HEROKU_APP_NAME}:${CIRCLE_SHA1}/web python tests.py
+            docker run --rm -it registry.heroku.com/${HEROKU_APP_NAME}/web python tests.py
       - run:
          name: Push Docker Image to Heroku Registry
          command: |
             echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-            docker push registry.heroku.com/${HEROKU_APP_NAME}:${CIRCLE_SHA1}/web
+            docker push registry.heroku.com/${HEROKU_APP_NAME}/web
   deploy:
     machine: true
     steps:
