@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  linter:
+  tests:
     docker:
       - image: circleci/python:3.7.4
     steps:
@@ -19,18 +19,10 @@ jobs:
           command: |
             . flaskops/bin/activate
             pylint --load-plugins pylint_flask --fail-under=7 app.py tests.py
-  unittests:
-    docker:
-      - image: circleci/python:3.7.4
-    steps:
-      - checkout
       - run:
-          name: Install python dependencies
+          name: Run Unit tests
           command: |
-            pip install --no-cache-dir -r requirements.txt
-      - run:
-          name: Run unittests
-          command: |
+            . flaskops/bin/activate
             python tests.py
       - store_artifacts:
           path: test-reports/
@@ -46,9 +38,9 @@ jobs:
           command: |
             docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/${HEROKU_APP_NAME}/web .
       - run:
-          name: Tests
+          name: Integration Tests
           command: |
-            docker run --rm -it registry.heroku.com/${HEROKU_APP_NAME}/web python tests.py
+            docker run --rm -it registry.heroku.com/${HEROKU_APP_NAME}/web python -m pytest -vv
       - run:
          name: Push Docker Image to Heroku Registry
          command: |
@@ -68,11 +60,10 @@ workflows:
   version: 2
   flask-ops-cicd:
     jobs:
-      - linter
-      - unittests
+      - tests
       - build:
           requires:
-            - linter
+            - tests
       - deploy:
           requires:
             - build
