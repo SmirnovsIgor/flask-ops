@@ -65,6 +65,7 @@ workflows:
   flask-ops-cicd:
     jobs:
       - linter
+      - unittests
       - build:
           requires:
             - linter
