@@ -26,22 +26,16 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/flask-ops:${CIRCLE_SHA1} .
+            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/${HEROKU_APP_NAME}:${CIRCLE_SHA1}/web .
+      - run:
+          name: Tests
+          command: |
+            docker run --rm -it registry.heroku.com/${HEROKU_APP_NAME}:${CIRCLE_SHA1} python tests.py
       - run:
          name: Push Docker Image to Heroku Registry
          command: |
             echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-            docker push registry.heroku.com/flask-ops:${CIRCLE_SHA1}
-  tests:
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Unit tests
-          command: |
-            echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-            docker pull registry.heroku.com/flask-ops:${CIRCLE_SHA1}
-            docker run --rm -it registry.heroku.com/flask-ops:${CIRCLE_SHA1} python tests.py
+            docker push registry.heroku.com/${HEROKU_APP_NAME}:${CIRCLE_SHA1}/web
   deploy:
     machine: true
     steps:
@@ -50,7 +44,7 @@ jobs:
           name: Deploy to Heroku
           command: |
             echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-
+            docker push registry.heroku.com/${HEROKU_APP_NAME}:${CIRCLE_SHA1}/web
 workflows:
   version: 2
   flask-ops-cicd:
@@ -59,6 +53,6 @@ workflows:
       - build:
           requires:
             - linter
-      - tests:
+      - deploy:
           requires:
-            - build
+            - tests
