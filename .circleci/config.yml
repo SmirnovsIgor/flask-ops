@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  lint:
+  linter:
     docker:
       - image: circleci/python:3.7.4
     steps:
@@ -26,12 +26,12 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build --build-arg salt=${SECRET_SALT} -t smirnovigor077/flask-ops:${CIRCLE_SHA1} .
+            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/flask-ops:${CIRCLE_SHA1} .
       - run:
-         name: Push Docker Image to DockerHub
+         name: Push Docker Image to Heroku Registry
          command: |
-            docker login -u $DOCKER_LOGIN --password=$DOCKER_PWD
-            docker push smirnovigor077/flask-ops:${CIRCLE_SHA1}
+            echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+            docker push registry.heroku.com/flask-ops:${CIRCLE_SHA1}
   tests:
     machine: true
     steps:
@@ -39,13 +39,18 @@ jobs:
       - run:
           name: Unit tests
           command: |
-            docker login -u $DOCKER_LOGIN -p $DOCKER_PWD
-            docker pull smirnovigor077/flask-ops:${CIRCLE_SHA1}
-            docker run --rm -it -d -p 5000:5000 smirnovigor077/flask-ops:${CIRCLE_SHA1} python tests.py
+            echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+            docker pull registry.heroku.com/flask-ops:${CIRCLE_SHA1}
+            docker run --rm -it registry.heroku.com/flask-ops:${CIRCLE_SHA1} python tests.py
+  deploy:
+    machine: true
+    steps:
+      - checkout
       - run:
-          name: Health check
+          name: Deploy to Heroku
           command: |
-            curl -sI 0.0.0.0:5000 | grep "HTTP/1.0 200"
+            echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+            
 workflows:
   version: 2
   flask-ops-cicd:
@@ -53,7 +58,7 @@ workflows:
       - lint
       - build:
           requires:
-            - lint
+            - linter
       - tests:
           requires:
             - build
