@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from flask import Flask
 
@@ -17,6 +15,10 @@ def app():
         return generate(test_salt)
     return app
 
+
+@pytest.fixture()
+def request_qty():
+    return 1
 
 @pytest.fixture
 def client(app):
