@@ -25,6 +25,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install python dependencies
+          command: |
+            pip install --no-cache-dir -r requirements.txt
+      - run:
           name: Run unittests
           command: |
             python tests.py
