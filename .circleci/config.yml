@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/$flask-ops:${CIRCLE_SHA1}/web .
+            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/flask-ops:${CIRCLE_SHA1}/web .
       - run:
           name: Tests
           command: |
