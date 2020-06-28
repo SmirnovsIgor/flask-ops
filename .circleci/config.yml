@@ -44,6 +44,7 @@ jobs:
           name: Deploy to Heroku
           command: |
             bash setup-heroku.sh
+            echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
             heroku container:push web --app ${HEROKU_APP_NAME}
 workflows:
   version: 2
