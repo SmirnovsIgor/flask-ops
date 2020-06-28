@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build --build-arg salt=${SECRET_SALT} -t registry.heroku.com/${HEROKU_APP_NAME}/web .
+            docker build --build-arg secret_salt=${SECRET_SALT} test_salt=${TEST_SALT} -t registry.heroku.com/${HEROKU_APP_NAME}/web .
       - run:
           name: Integration Tests
           command: |
